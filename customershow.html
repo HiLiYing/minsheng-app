@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+   
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/app.css" />
+ 
+    
+    <style type="text/css">
+    html, body { color:#222; font-family:华文细黑; margin:0; padding: 0; text-decoration: none; }
+    	.mui-bar{
+         background-color: #0099FF;
+         }
+		.mui-title{
+		     color:#fff;
+		}
+		
+	   .mui-bar .mui-title {
+	    right: 40px;
+	    left: 40px;
+	    display: inline-block;
+	    overflow: hidden;
+	    width: auto;
+	    margin: 0;
+	    text-overflow: ellipsis;
+	   }
+	
+		.mui-title-color {
+		    color: #ffffff;
+		    font-size: 22px;
+		}
+		
+		
+/*.box {
+	
+width: 200px;
+background: orange;
+height: 100px;
+line-height: 100px;
+text-align: center;
+color: #fff;
+font-size: 3em;
+
+margin: 10px;
+}
+.box:nth-child(even){
+background: green;
+}
+#k{
+	height:200px ;
+	width: 400px;
+}*/
+/*.wrapper {
+width: 100%;
+border: 1px solid orange;
+padding: 15px;
+margin: 20px auto;</p><p> display: grid;
+grid-template-columns: repeat(5, 100px);
+grid-template-rows: auto ;
+}*/
+
+/*.wrapper {
+  position: relative;
+  
+  display: grid;
+  grid-template-columns: 100px 10px 100px 10px 100px 10px 100px;
+  grid-template-rows: auto 10px auto 10px auto 10px auto 10px auto;
+}*/
+.wrapper{ list-style: none outside none; margin:0; padding: 0; 
+  width: 100%;
+}
+
+.box{ clear: both; content: " "; display: block; }
+.box {
+
+  background-color: #444;
+  color: #0000;
+  font-size: 68%;
+  padding-top: 50px;
+  text-align: center;
+  
+}
+
+
+#a,#b,#c,#d,#e,#f,#g,#h,#i,#j,#k,#m,#n,#o{
+  position: absolute;
+  height: 80px;
+  width: 25%;
+  border: 1px ridge #F4E9E0;
+  background-color: #FFFFFF;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: 18px;
+  background-size: 32%;
+}
+.response-img {
+     max-width: 100%;
+   
+}
+
+#header{
+	 position: absolute;
+	 width: 100%;
+	 top: 44px;
+}
+#header img{
+	width: 100%;
+}
+#a{
+  top: 180px;
+  left: 0%;
+  background-image: url(img/top1_left1.png);
+
+}
+#b{
+  top:180px;
+  left: 25%;
+  background-image: url(img/top1_left2.png);
+  
+}
+#c{
+  top:180px;
+  left: 50%;
+  background-image: url(img/top1_left3.png);
+  
+}
+#d{
+  position: absolute;
+  top:180px;
+  left: 75%;
+  background-image: url(img/top1_left4.png);
+  
+}
+#e{
+  top: 260px;
+  left: 0%;
+  background-image: url(img/top2_left1.png);
+}
+#f{
+  position: relative;
+  top: 260px;
+  width: 50%;
+  height: 160px;
+  left: 25%;
+  background-size: 60%;
+  padding-top: 120px;
+  font-size: 15px;
+  
+}
+#f img{
+	position:absolute;
+	top: 12px;
+	left: 35px;
+	width: 100px;
+	height: auto;
+	border-radius: 50%;
+	overflow: hidden;
+	max-width: 100%; 
+	
+}
+
+
+#g{
+  top: 260px;
+  left: 75%;
+  background-image: url(img/top2_left4.png);
+}
+#h{
+  top: 340px;
+  left: 0%;
+  background-image: url(img/top3_left1.png);
+  
+}
+#i{
+  top: 340px;
+  left: 75%;
+  background-image: url(img/top3_left4.png);
+  
+}
+#j{
+  top: 420px;
+  left: 0%;
+  background-image: url(img/top4_left1.png);
+}
+#m{
+  top: 420px;
+  left: 25%;
+  background-image: url(img/top4_left2.png);
+  
+}
+#n{
+  top: 420px;
+  left: 50%;
+  background-image: url(img/top4_left3.png);
+}
+#o{
+  top: 420px;
+  left: 75%;
+  background-image: url(img/top4_left4.png);
+  
+}
+
+  </style>
+  
+</head>
+<body>
+	    <header class="mui-bar mui-bar-nav mui-title-background-color">
+			<h1 class="mui-title mui-title-color">客户全景视图</h1>
+		</header>
+	<!--	<div class="mui-row">  
+        <div class="mui-col-xs-12">12</div>  
+        <div class="mui-col-xs-11">11</div>  
+        <div class="mui-col-xs-1">1</div>  
+        <div class="mui-col-xs-10">10</div>  
+        <div class="mui-col-xs-2">2</div>  
+        <div class="mui-col-xs-9">9</div>  
+        <div class="mui-col-xs-3">3</div>  
+        <div class="mui-col-xs-8">8</div>  
+        <div class="mui-col-xs-4">4</div>  
+        <div class="mui-col-xs-7">7</div>  
+        <div class="mui-col-sm-5">5</div>  
+        <div class="mui-col-xs-6">6</div>  
+        <div class="mui-col-xs-6">6</div>  
+        
+    </div> -->
+  
+ <div id="header"  ><img src="img/header.png"></div> 
+<div class="wrapper">
+	  
+<div id="a" class="box a"><span>客户基本信息</span></div>
+<div id="b"class="box b"><span>家庭关系信息<span/></div>
+<div id="c" class="box c"><span>业务进度信息</span></div>
+<div id="d"class="box d"><span>预警信息</span></div>
+<div id="e" class="box e"><span>销售人员信息</span></div>
+<div id="f" class="box f"> <img src="img/top2_left2.jpg"><span>钱学琳</span></img> </div>
+<div id="g"class="box g"><span>增值服务</span></div>
+<div id="h"class="box h"><span>保单合同信息</span></div>
+<div id="i" class="box i"><span>价值分析信息</span></div>
+<div id="j"class="box j"><span>保全理赔信息</span></div>
+<div id="m"class="box m"><span>收付费信息</span></div>
+<div id="n"class="box n"><span>接触历史信息</span></div>
+<div id="o" class="box o"><span>金融资产信息</span></div>
+ 
+ <script src="js/mui.min.js"></script>
+ 
+ <script src="js/app.js"></script>
+ 	
+	<script type="text/javascript" charset="utf-8">
+	  	mui.init();
+	</script>
+	<script type="text/jscript">
+		
+	  	 mui(".wrapper").on('tap','#a',function(){
+	  	 	  mui.openWindow({
+							url:'customerInfo.html',
+							id:'customerInfo.html',
+							});
+							
+			//先删除
+				sessionStorage.removeItem('customerInfo');
+				
+				//再保存
+				sessionStorage.setItem('customerInfo', "123");
+	  	 });
+	  	 
+	  	 
+	  	 
+	  	  mui(".wrapper").on('tap','#b',function(){
+	  	 	  mui.openWindow({
+							url:'familyRelationInfo.html',
+							id:'familyRelationInfo.html',
+							});
+							
+			//先删除
+				sessionStorage.removeItem('customerInfo');
+				
+				//再保存
+				sessionStorage.setItem('customerInfo', "123");
+	  	 });
+	</script>
+
+</body>
+</html>

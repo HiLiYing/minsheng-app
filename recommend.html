@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<!--App自定义的css-->
+		<link rel="stylesheet" href="css/app.css" />
+		<link rel="stylesheet" href="css/pull_refresh.css" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/constant.js"></script>
+		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/mui.pullToRefresh.material.js"></script>
+		<title></title>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav mui-title-background-color">
+			<h1 class="mui-title mui-title-color">营销助手</h1>
+		</header>
+		<div class="mui-content">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<!--
+                	tab标签
+                -->
+				<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div class="mui-scroll" style="background-color: white; width: 100%;">
+						<a href="#item_recommend" class="mui-control-item mui-active" style="font-size:20px;">
+							精准营销
+						</a>
+						<a href="#item_industry" class="mui-control-item" style="font-size:20px;">
+							行业热点
+						</a>
+					</div>
+				</div>
+				<!--
+                	内容
+                -->
+				<div class="mui-slider-group">
+					<div id="item_recommend" class="mui-slider-item mui-control-content mui-active">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<!--
+                    				关键字
+                   					 -->
+								<div style="height:50px;background-color: #f1f1f1;margin-left:5px;margin-top:5px;">
+									<div class="mui-input-row mui-search" style="width:98%;float:left;">
+										<input id="input-search-keyword" type="text" onclick="onsearchKeyWord()" class="mui-input-clear mui-search-img" placeholder="关键词" style="padding-left:35px;font-size:14px;border:1px solid #ffffff; border-radius: 6px;">
+									</div>
+
+								</div>
+								<!--精准营销列表-->
+								<ul id="recommend-list" class="mui-table-view mui-table-view-chevron">
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item_industry" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<!--
+                    				行业产品热度部分
+                   					 -->
+								<div class="mui-industry-style">
+									<div style="float: left; margin-top:15px; margin-bottom:10px;">
+										<img src="img/host.png" style="height: 23px;width: 23px;" />
+									</div>
+									<span class="mui-host">行业产品热度</span>
+								</div>
+								<!--列表-->
+								<table width="100%" border="0" class="industry-table mui-media">
+									<thead>
+										<tr>
+											<th width="25%">类别</th>
+											<th width="35%">代表产品</th>
+											<th width="30%">搜索热度</th>
+											<th width="10%"></th>
+										</tr>
+									</thead>
+									<tbody id="identity_hot_product">
+									</tbody>
+								</table>
+								<!--
+                    				竞品解读部分---根据行业产品热度下拉刷新来请求数据
+                   					 -->
+								<div class="mui-industry-style">
+									<div style="float: left; margin-top:15px;">
+										<img src="img/read.png" style="height: 23px;width: 23px;" />
+									</div>
+									<span class="mui-host">竞品解读</span>
+								</div>
+								<!--列表-->
+								<div id="identity_compet_product">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" charset="utf-8">
+			//用户id
+			var userId;
+			//关键字
+			var keyword = "";
+			//精准营销或者行业产品热度当前页面
+			var pageNow = 1;
+			//行业产品热度总页数
+			var pageCount;
+
+			//竞品解读当前页面
+			var pageNow2 = 1;
+			//竞品解读总页数
+			var pageCount2;
+			//下拉刷新类型（-1-首次进入,0-下拉刷新，1-上拉更多）
+			var pullRefreshType = -1;
+
+			(function($) {
+				//接收？传参
+				getAttributValue();
+				//设置下拉刷新
+				setpullRefresh($);
+			})(mui);
+
+			/**
+			 * 设置下拉刷新
+			 * @param $
+			 */
+			function setpullRefresh($) {
+				//阻尼系数
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				//下拉刷新公共设计
+				$('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载
+					$.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+						$(pullRefreshEl).pullToRefresh({
+							down: { //下拉加载最新
+								callback: function() {
+									//下拉刷新对象
+									var pullRefreshSelf = this;
+									//标记为下拉刷新
+									pullRefreshType = 0;
+									setTimeout(function() {
+										//清空数据
+										//										var adImgList = document.getElementById("recommend-list");
+										//										adImgList.innerHTML = "";
+										//请求网络
+										if(index == 0) { //精准营销
+											queryrecommend(userId, "", 1);
+										} else if(index == 1) { //行业热度
+											//行业产品热度
+											queryHotProduct(userId, 1);
+											//竞品解读
+											queryCompetProduct(userId, 1);
+										}
+										pullRefreshSelf.endPullDownToRefresh();
+									}, 1000);
+								}
+							},
+							up: { //上拉加载更多
+								callback: function() {
+									//下拉刷新对象
+									var pullRefreshSelf = this;
+									//标记为上拉更多
+									pullRefreshType = 1;
+									setTimeout(function() {
+										//请求网络
+										if(index == 0) { //精准营销
+											pageNow = pageNow + 1;
+											if(pageNow > pageCount) {
+												pullRefreshSelf.endPullUpToRefresh(true); //没有更多数据
+											} else {
+												queryrecommend(userId, keyword, pageNow);
+												pullRefreshSelf.endPullUpToRefresh(false); //还有更多数据
+											}
+										} else if(index == 1) { //行业热度
+											//请求网络
+											pageNow = pageNow + 1;
+											pageNow2 = pageNow2 + 1;
+											if(pageNow > pageCount && pageNow2 > pageCount2) { //都没有数据
+												pullRefreshSelf.endPullUpToRefresh(true); //没有更多数据
+											} else { //还有数据
+												if(pageCount >= pageNow && pageNow2 > pageCount2) { //行业产品热度有数据
+													queryHotProduct(userId, pageNow);
+												} else if(pageCount2 >= pageNow2 && pageNow > pageCount) { //竞品解读有数据
+													queryCompetProduct(userId, pageNow2);
+												} else { //都有数据
+													queryHotProduct(userId, pageNow);
+													queryCompetProduct(userId, pageNow2);
+												}
+												pullRefreshSelf.endPullUpToRefresh(false); //还有更多数据
+											}
+										}
+
+									}, 1000);
+								}
+							}
+						});
+					});
+				});
+			}
+
+			/**
+			 * 获得url传参
+			 */
+			function getAttributValue() {
+				//模拟数据
+				var urlStr = "http://10.21.4.10:8020/Insurance/recommend.html?openUser=55WF2nfpP9RayNAfJGTmGA==";
+				//var urlStr = window.location.href;
+				var n = urlStr.indexOf("?") //查看是否包含参数   
+				if(n > 0) { //存在参数  
+					//获得用户id
+					userId = getAttribut(urlStr, "openUser");
+					//获得网络数据
+					initData(userId);
+				} else {
+					alert("参数错误");
+				}
+			}
+
+			/**
+			 * 获得网络数据
+			 * @param {Object} data
+			 */
+			function initData(data) {
+				//保存代课用户json
+				initUserData(data);
+				//精准营销列表
+				queryrecommend(userId, keyword, pageNow);
+				//行业产品热度
+				queryHotProduct(userId, pageNow);
+				//竞品解读
+				queryCompetProduct(userId, pageNow2);
+			}
+
+			/**
+			 * 保存用户数据
+			 * @param {Object} data 
+			 */
+			function initUserData(data) {
+				//先删除
+				sessionStorage.removeItem('userData');
+				//再保存
+				sessionStorage.setItem('userData', data);
+			}
+
+			/**
+			 * 精准营销生成
+			 * @param {Object} fragment 父类布局
+			 * @param {Object} list 数据
+			 */
+			function onCreateRecommend(fragment, list) {
+				mui.each(list, function(i, data) {
+					var li = document.createElement('li');
+					li.className = 'mui-table-view-cell mui-border-bottom';
+					li.innerHTML = '<a id="recommend-item" class="mui-navigate-right"><div style="float: left;"><p class="mui-name">' + data.iCiName + '</p><p class="mui-phone">' + data.iCiPhone + '</p></div><div style="float: right;"><p class="mui-produce">' + data.productName + '</p></div></a>';
+					if(pullRefreshType == -1 || pullRefreshType == 1) { //首次加载，上拉加载更多
+						fragment.appendChild(li); //后面追加
+					} else if(pullRefreshType == 0) { //下拉刷新
+						fragment.insertBefore(li); //添加到最前面
+					}
+					
+					/**
+					 * 精准营销的点击事件
+					 */
+					li.addEventListener('tap', function() {
+						gotoRecommendDetails(data.idCiId);
+					});
+				});
+			}
+
+			/**
+			 * 跳转到详情页面
+			 * @ clientId 客户id
+			 */
+			function gotoRecommendDetails(clientId) {
+				//先删除
+				sessionStorage.removeItem('clientId');
+				//再保存
+				sessionStorage.setItem('clientId', clientId);
+				mui.openWindow({
+					id: "client",
+					url: "client.html",
+					show: {
+						aniShow: 'zoom-fade-out',
+						duration: 300
+					}
+				});
+			}
+
+			/**
+			 * 关键字查询
+			 */
+			function onsearchKeyWord() {
+				//清空数据
+				var adImgList = document.getElementById("recommend-list");
+				adImgList.innerHTML = "";
+				pullRefreshType = -1;
+				//关键字
+				keyword = document.getElementById("input-search-keyword").value;
+				//精准营销列表
+				queryrecommend(userId, keyword, 1);
+			}
+
+			/**
+			 * 行业产品热度VIEW
+			 * @param {Object} fragment 父类布局
+			 * @param {Object} list 数据
+			 */
+			function onCreateHotProductView(fragment, list) {
+				mui.each(list, function(i, data) {
+					var tr = document.createElement('tr');
+					var htmlStr = '<td>' + data.productType + '</td><td style="text-align: left;">' + data.productName + '</td><td>';
+					//热度图标
+					if(data.typeId == 1) { //1热有图标 
+						htmlStr = htmlStr + '<div class="fl" style="width: 30%;"><img class="hot-img" src="img/hot.png" style="height: 15px;width: 15px;"/></div>';
+					}
+					htmlStr = htmlStr + '<div class="fr" style="width: 70%;">' + accMul(data.hotCount, 100) + "%" + '</div></td>';
+					//上升下降图标
+					if(data.hotTrend == 1) { //1上升
+						htmlStr = htmlStr + '<td><img class="up-img" src="img/up.png" style="height: 10px;width: 10px;"/></td>';
+					} else if(data.hotTrend == 2) { //持平 
+						htmlStr = htmlStr + '<td><img class="up-img" src="img/down.png" style="height: 10px;width: 10px;"/></td>';
+					} else if(data.hotTrend == 3) { //下降
+						htmlStr = htmlStr + '<td><img class="up-img" src="img/minus.png" style="width: 10px;"/></td>';
+					}
+					tr.innerHTML = htmlStr;
+					if(pullRefreshType == -1 || pullRefreshType == 1) { //首次加载，上拉加载更多
+						fragment.appendChild(tr); //后面追加
+					} else if(pullRefreshType == 0) { //下拉刷新
+						fragment.insertBefore(tr); //添加到最前面
+					}
+				});
+			}
+
+			/**
+			 * 竞品解读VIEW
+			 * @param {Object} fragment 父类布局
+			 * @param {Object} list 数据
+			 */
+			function onCreateCompetProductView(fragment, list) {
+				mui.each(list, function(i, data) {
+					var div = document.createElement('div');
+					div.className = 'mui-margin mui-client-produce';
+					div.innerHTML = '<p onclick="gotoOpenPdf(\'' + data.productUrl + '\')" class="mui-name">' + data.productTitle + '</p>';
+					if(pullRefreshType == -1 || pullRefreshType == 1) { //首次加载，上拉加载更多
+						fragment.appendChild(div); //后面追加
+					} else if(pullRefreshType == 0) { //下拉刷新
+						fragment.insertBefore(div); //添加到最前面
+					}
+				});
+			}
+
+			/**
+			 * 开启pdf
+			 * @ url pdf资源
+			 */
+			function gotoOpenPdf(url) {
+				//先删除
+				sessionStorage.removeItem('pdffile_url');
+				//再保存
+				sessionStorage.setItem('pdffile_url', url);
+				mui.openWindow({
+					id: "pdfshow",
+					url: "plugin/pdfjs/generic/web/viewer.html",
+					show: {
+						aniShow: 'zoom-fade-out',
+						duration: 300
+					}
+				});
+			}
+
+			/**
+			 * 精准营销列表
+			 * @param {Object} agentCode 代理人id(用户id)
+			 * @param {Object} keyword 关键字
+			 * @param {Object} pageNow 当前页面
+			 */
+			function queryrecommend(pAgentCode, keyword, pPageNow) {
+				var url = baseUrl + "queryrecommend.json";
+				mui.ajax(url, {
+					data: {
+						agentCode: pAgentCode,
+						keywords: keyword,
+						pageNow: pPageNow,
+						pageSize: mPageSize
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					//headers:{'Content-Type':'application/json'}
+					success: function(result) {
+						if(result.status == 1) {
+							var data = result.data;
+							//保存全局
+							pageCount = Math.ceil(data.totalRecords / data.pageSize);
+							pageNow = data.pageNumber; //全局记录
+							//更新UI
+							var list = data.pageData; //json数据
+							//精准营销列表view
+							var adImgList = document.getElementById("recommend-list");
+							onCreateRecommend(adImgList, list);
+						} else {
+							mui.toast("列表数据获取异常，请稍后再试");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}
+
+			/**
+			 * 行业产品热度
+			 * @param {Object} agentCode 代理人id(用户id)
+			 * @param pPageNow 当前页面
+			 */
+			function queryHotProduct(agentCode, pPageNow) {
+				var url = baseUrl + "queryhotproduct.json";
+				mui.ajax(url, {
+					data: {
+						agentCode: agentCode,
+						pageNow: pPageNow,
+						pageSize: mPageSize
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					//headers:{'Content-Type':'application/json'}      
+					success: function(result) {
+						if(result.status == 1) {
+							var data = result.data;
+							//保存全局
+							pageCount = Math.ceil(data.totalRecords / data.pageSize);
+							pageNow = data.pageNumber; //全局记录
+							//更新UI
+							var list = data.pageData; //json数据
+							var products = document.getElementById("identity_hot_product");
+							onCreateHotProductView(products, list);
+						} else {
+							mui.toast("行业产品热度获取异常，请稍后再试");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}
+
+			/**
+			 * 竞品解读
+			 * @param {Object} agentCode 代理人id(用户id)
+			 * @param pPageNow 当前页面
+			 */
+			function queryCompetProduct(agentCode, pPageNow) {
+				var url = baseUrl + "querycompetproduct.json";
+				mui.ajax(url, {
+					data: {
+						agentCode: agentCode,
+						pageNow: pPageNow,
+						pageSize: mPageSize
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					//headers:{'Content-Type':'application/json'}      
+					success: function(result) {
+						if(result.status == 1) {
+							var data = result.data;
+							//保存全局
+							pageCount2 = Math.ceil(data.totalRecords / data.pageSize);
+							pageNow2 = data.pageNumber; //全局记录
+							//更新UI
+							var list = data.pageData; //json数据
+							var products = document.getElementById("identity_compet_product");
+							onCreateCompetProductView(products, list);
+						} else {
+							mui.toast("竞品解读获取异常，请稍后再试");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/app.css" />
+		<link rel="stylesheet" href="css/chart_table.css" />
+		<script type="text/javascript" src="js/constant.js"></script>
+		<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="js/highcharts.js"></script>
+		<script type="text/javascript" src="js/exporting.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+		<script type="text/javascript">
+			//领导code
+			var leaderCode;
+
+			var options = {
+				chart: {
+					renderTo: 'userImg', //DIV容器ID
+					type: 'line'
+				},
+				title: {
+					text: ''
+				},
+				subtitle: {
+					text: ''
+				},
+				xAxis: {
+					categories: []
+				},
+				yAxis: {
+					title: {
+						text: '用户转换率 (%)'
+					}
+				},
+				plotOptions: {
+					line: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true
+					}
+				},
+				series: [{
+					name: '用户转化率',
+					data: []
+				}]
+			};
+			var options2 = {
+				chart: {
+					renderTo: 'productImg', //DIV容器ID
+					type: 'line'
+				},
+				title: {
+					text: ''
+				},
+				subtitle: {
+					text: ''
+				},
+				xAxis: {
+					categories: []
+				},
+				yAxis: {
+					title: {
+						text: '产品转换率 (%)'
+					}
+				},
+				plotOptions: {
+					line: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true
+					}
+				},
+				series: [{
+					name: '产品转化率',
+					data: []
+				}]
+			};
+			$(function() {
+				var curDate = new Date();
+			    var m=curDate.getMonth() + 1;
+			    m=m<10 ? "0"+m : m;
+			    
+			    var d=curDate.getDate();
+			    d=d<10 ? "0"+d : d;
+			    
+				var str = curDate.getFullYear() + "-" + m + "-" + d;
+				$("#endDate").val(str);
+				//接收？传参
+				getAttributValue();
+			});
+
+			/**
+			 * 获得url传参
+			 */
+			function getAttributValue() {
+				//模拟数据
+				var urlStr = "http://10.21.4.10:8020/Insurance/chartshow.html?openUser=55WF2nfpP9RayNAfJGTmGA==";
+				//var urlStr = window.location.href;
+				var n = urlStr.indexOf("?") //查看是否包含参数   
+				if(n > 0) { //存在参数  
+					//获得用户id
+					leaderCode = getAttribut(urlStr, "openUser");
+					if(leaderCode.length == 0) {
+						alert("参数错误");
+						return false;
+					}
+					//获得网络数据
+					initData();
+				} else {
+					alert("参数错误");
+				}
+			}
+
+			/**
+			 * 获得网络数据
+			 */
+			function initData() {
+				//查询
+				queryData();
+			}
+
+			//查询
+			function queryData() {
+				var endDate = $("#endDate").val();
+				if(endDate.length == 0) {
+					alert("请选择日期");
+					return false;
+				}
+				$.getJSON(baseUrl_client + "/getleaderpermission.json", {
+					leaderCode: leaderCode
+				}, function(data) {
+					if(data.status == 1) {
+						queryUserData();
+						queryProductData();
+					} else {
+						alert("权限不足,不能查看数据");
+					}
+
+				});
+			}
+
+			//导出
+			function exportData() {
+				var endDate = $("#endDate").val();
+				if(endDate.length == 0) {
+					alert("请选择日期");
+					return false;
+				}
+				window.location.href = baseUrl_client + "/exportconvertdata?endDate=" + endDate;
+			}
+
+			function queryUserData() {
+				var endDate = $("#endDate").val();
+				$.getJSON(baseUrl_client + "/queryuserconvert.json", {
+					endDate: endDate
+				}, function(data) {
+					//console.log(data);
+					$("#userTableDatas").html("");
+					var html = "";
+					var len = data.data.length;
+					for(var i = 0; i < len; i++) {
+						var result = data.data[i];
+						options.xAxis.categories[i] = result.checkDateStr;
+						options.series[0].data[i] = result.convertRate;
+						html += "<tr>";
+						html += "<td>" + result.checkDateStr + "</td>";
+						html += "<td>" + result.convertRate + "</td>";
+						html += "<td>" + result.recommendCount + "</td>";
+						html += "<td>" + result.purchaseCount + "</td>";
+						html += "</tr>";
+						if(i == (len - 1)) {
+							$("#lastUserConvert").text(result.convertRate);
+							$("#lastUserCnt").text(result.recommendCount);
+							$("#lastUserPurchase").text(result.purchaseCount);
+						}
+					}
+					$("#userTableDatas").html(html);
+					var chart = new Highcharts.Chart(options);
+				});
+			}
+
+			function queryProductData() {
+				var endDate = $("#endDate").val();
+				$.getJSON(baseUrl_client + "/queryproductconvert.json", {
+					endDate: endDate
+				}, function(data) {
+					//console.log(data);
+					$("#productTableDatas").html("");
+					var html = "";
+					var len = data.data.length;
+					for(var i = 0; i < data.data.length; i++) {
+						var result = data.data[i];
+						options2.xAxis.categories[i] = result.checkDateStr;
+						options2.series[0].data[i] = result.convertRate;
+						html += "<tr>";
+						html += "<td>" + result.checkDateStr + "</td>";
+						html += "<td>" + result.convertRate + "</td>";
+						html += "<td>" + result.recommendCount + "</td>";
+						html += "<td>" + result.purchaseCount + "</td>";
+						html += "</tr>";
+						if(i == (len - 1)) {
+							$("#lastProductConvert").text(result.convertRate);
+							$("#lastProductCnt").text(result.recommendCount);
+							$("#lastProductPurchase").text(result.purchaseCount);
+						}
+					}
+					$("#productTableDatas").html(html);
+					var chart = new Highcharts.Chart(options2);
+				});
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="search">
+
+				<span><input type="date" onchange="queryData()" id="endDate" class="search-date" style="height: 35px; width: 90%; border-radius: 6px;" placeholder="请选择日期"/></span>
+
+			</div>
+			<div class="percent-one clearfix">
+				<div class="percent">
+					<div class="user clearfix"><span>用户转化率</span></div>
+					<div class="user-recommend clearfix">
+						<div class="recommend">
+							<div>推荐人次转化率</div>
+							<div class="recommend-number">3.65%</div>
+						</div>
+						<div class="recommend-one">
+							<div>推荐人次(万次)</div>
+							<div class="recommend-number">3.2</div>
+						</div>
+						<div class="recommend-two">
+							<div>推荐且购买人次(万次)</div>
+							<div class="recommend-number">0.2</div>
+						</div>
+					</div>
+					<!--
+                 	作者：1226101535@qq.com
+                 	时间：2016-11-09
+                 	描述：用户转化率图
+                 -->
+
+					<div class="user-img" id="userImg">
+
+					</div>
+
+				</div>
+				<div class="percent-table">
+					<table width="100%" border="1">
+						<thead>
+							<tr>
+								<th width="30%">日期</th>
+								<th width="23%">推荐人转换率(%)</th>
+								<th width="23%">推荐人次(万次)</th>
+								<th>推荐且购买人次(万次)</th>
+							</tr>
+						</thead>
+						<tbody id="userTableDatas">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!--
+      	作者：1226101535@qq.com
+      	时间：2016-11-09
+      	描述：产品转化率
+      -->
+			<div class="percent-two clearfix">
+				<div class="percent">
+					<div class="user clearfix"><span>产品转化率</span></div>
+					<div class="user-recommend">
+						<div class="recommend">
+							<div>推荐产品转化率</div>
+							<div class="recommend-number">3.65%</div>
+						</div>
+						<div class="recommend-one">
+							<div>推荐产品(万条)</div>
+							<div class="recommend-number">3.2</div>
+						</div>
+						<div class="recommend-two">
+							<div>推荐且购买产品(万条)</div>
+							<div class="recommend-number">0.2</div>
+						</div>
+					</div>
+					<!--
+                 	作者：1226101535@qq.com
+                 	时间：2016-11-09
+                 	描述：产品转化率图
+                 -->
+					<div class="user-img" id="productImg">
+
+					</div>
+
+				</div>
+				<div class="percent-table">
+					<table width="100%" border="1">
+						<thead>
+							<tr>
+								<th width="30%">日期</th>
+								<th width="23%">推荐产品转化率(%)</th>
+								<th width="23%">推荐产品(万条)</th>
+								<th>推荐且购买产(万条)</th>
+							</tr>
+						</thead>
+						<tbody id="productTableDatas">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+		</div>
+	</body>
+
+</html>

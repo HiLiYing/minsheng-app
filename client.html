@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<!--App自定义的css-->
+		<link rel="stylesheet" href="css/app.css" />
+		<link rel="stylesheet" href="css/pull_refresh.css" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/constant.js"></script>
+		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/mui.pullToRefresh.material.js"></script>
+		<title></title>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav mui-title-background-color">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left mui-back-color"></a>
+			<h1 id="client_title" class="mui-title mui-title-color"></h1>
+		</header>
+		<div class="mui-content">
+			<!--下拉刷新容器-->
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div class="mui-slider-group">
+					<div class="mui-slider-item mui-control-content mui-active">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<!--
+                                	客户信息部分
+                                -->
+								<div class="mui-industry-style">
+									<div style="float: left; margin-top:15px;">
+										<img src="img/client.png" style="height: 23px;width: 23px;" />
+									</div>
+									<span class="mui-host">客户基本信息</span>
+								</div>
+								<ul class="mui-table-view mui-table-view-chevron" style="margin:5px; font-size: 18px;">
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">姓名</span>
+										</div>
+										<div class="fr">
+											<span id="client_name" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom">
+										<div class="fl">
+											<span class="client-fl">性别</span>
+										</div>
+										<div class="fr">
+											<span id="client_sex" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">年龄</span>
+										</div>
+										<div class="fr">
+											<span id="client_age" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">身份证号</span>
+										</div>
+										<div class="fr">
+											<span id="client_identity_card" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">手机</span>
+										</div>
+										<div class="fr">
+											<span id="client_phone" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">婚姻状态</span>
+										</div>
+										<div class="fr">
+											<span id="client_marital_status" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">有无子女</span>
+										</div>
+										<div class="fr">
+											<span id="client_isdescendant" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">健康状况</span>
+										</div>
+										<div class="fr">
+											<span id="client_health_condition" class="client-fr"></span>
+										</div>
+									</li>
+								</ul>
+								<ul class="mui-table-view mui-table-view-chevron" style="margin-top: 0px; font-size: 18px; margin-bottom: 5px; margin-right: 5px; margin-left: 5px;">
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">学历</span>
+										</div>
+										<div class="fr">
+											<span id="client_education" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">职业</span>
+										</div>
+										<div class="fr">
+											<span id="client_occupation" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">年收入</span>
+										</div>
+										<div class="fr">
+											<span id="client_annual_income" class="client-fr"></span>
+										</div>
+									</li>
+									<li class="mui-table-view-cells mui-border-bottom ">
+										<div class="fl">
+											<span class="client-fl">出险次数</span>
+										</div>
+										<div class="fr">
+											<span id="client_outdanger_count" class="client-fr">3次</span>
+										</div>
+									</li>
+								</ul>
+								<!--
+                                	推荐产品部分
+                                -->
+								<div class="mui-industry-style">
+									<div style="float: left; margin-top:15px ;">
+										<img src="img/produce.png" style="height: 23px;width: 23px;" />
+									</div>
+									<span class="mui-host">推荐产品</span>
+								</div>
+								<!--推荐产品-->
+								<div id="client_recommend_products">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" charset="utf-8">
+			//当前页面
+			var pageNow = 1;
+			//总页数
+			var pageCount;
+			//用户id
+			var userId;
+			//客户端id
+			var clientId;
+			//下拉刷新类型（-1-首次进入,0-下拉刷新，1-上拉更多）
+			var pullRefreshType = -1;
+
+			(function($) {
+				//获得网络数据
+				initData();
+				//设置下拉刷新
+				setpullRefresh($);
+			})(mui);
+
+			/**
+			 * 设置下拉刷新
+			 * @param $
+			 */
+			function setpullRefresh($) {
+				//阻尼系数
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				$('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载。
+					$.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+						$(pullRefreshEl).pullToRefresh({
+							down: { //下拉加载最新
+								callback: function() {
+									//下拉刷新对象
+									var pullRefreshSelf = this;
+									//标记为下拉刷新
+									pullRefreshType = 0;
+									setTimeout(function() {
+										//获得用户数据
+										clientInfo(clientId);
+										//推荐产品
+										recommendProductList(clientId,userId, 1);
+										pullRefreshSelf.endPullDownToRefresh();
+									}, 1000);
+								}
+							},
+							up: { //上拉加载更多
+								callback: function() {
+									var pullRefreshSelf = this;
+									//标记为上拉更多
+									pullRefreshType = 1;
+									setTimeout(function() {
+										//请求网络
+										pageNow = pageNow + 1;
+										if(pageNow > pageCount) {
+											pullRefreshSelf.endPullUpToRefresh(true); //没有更多数据
+										} else {
+											recommendProductList(clientId,userId,pageNow);
+											pullRefreshSelf.endPullUpToRefresh(false); //还有更多数据
+										}
+									}, 1000);
+								}
+							}
+						});
+					});
+				});
+			}
+
+			/**
+			 * 获得网络数据
+			 */
+			function initData() {
+				//用户id
+				userId = sessionStorage.getItem("userData");
+				//客户id
+				clientId = sessionStorage.getItem('clientId');
+				//获得用户数据
+				clientInfo(clientId,userId);
+				//推荐产品
+				recommendProductList(clientId,userId,1);
+			}
+			/**
+			 * 基本数据view
+			 */
+			function createClientInfoView(data) {
+				var client_title = document.getElementById("client_title");
+				var client_name = document.getElementById("client_name");
+				var client_sex = document.getElementById("client_sex");
+				var client_age = document.getElementById("client_age");
+				var client_identity_card = document.getElementById("client_identity_card");
+				var client_phone = document.getElementById("client_phone");
+				var client_marital_status = document.getElementById("client_marital_status");
+				var client_isdescendant = document.getElementById("client_isdescendant");
+				var client_health_condition = document.getElementById("client_health_condition");
+
+				var client_education = document.getElementById("client_education");
+				var client_occupation = document.getElementById("client_occupation");
+				var client_annual_income = document.getElementById("client_annual_income");
+				var client_outdanger_count = document.getElementById("client_outdanger_count");
+				if(data.iCiName != "") { //姓名
+					client_name.innerHTML = data.iCiName;
+					client_title.innerHTML = data.iCiName;
+				}
+				if(data.nCiSex != "") { //性别
+					client_sex.innerHTML = data.nCiSex;
+				}
+				if(data.iCiAge != "") { //年龄
+					client_age.innerHTML = data.iCiAge;
+				}
+				if(data.iCiId != "") { //身份证
+					client_identity_card.innerHTML = data.iCiId;
+				}
+				if(data.iCiPhone != "") { //手机号
+					client_phone.innerHTML = data.iCiPhone;
+				}
+				if(data.nCiMarriage != "") { //婚姻状况
+					client_marital_status.innerHTML = data.nCiMarriage;
+				}
+				if(data.isChild != "") { //有无子女
+					client_isdescendant.innerHTML = data.isChild;
+				}
+				if(data.healthStatus != "") { //健康状况
+					client_health_condition.innerHTML = data.healthStatus;
+				}
+				if(data.oCiEduLevel != "") { //学历
+					client_education.innerHTML = data.oCiEduLevel;
+				}
+				if(data.nCiOccupation != "") { //职业
+					client_occupation.innerHTML = data.nCiOccupation;
+				}
+				if(data.iCiIncome != "") { //年收入
+					client_annual_income.innerHTML = data.iCiIncome;
+				}
+				if(data.outInsuranceCount != "") { //出险次数
+					client_outdanger_count.innerHTML = data.outInsuranceCount;
+				}
+			}
+
+			/**
+			 * 推荐产品
+			 * @param {Object} fragment 父类布局
+			 * @param {Object} list 数据
+			 */
+			function onCreateRecommendProductView(fragment, list) {
+				mui.each(list, function(i, data) {
+					var div = document.createElement('div');
+					div.className = 'mui-margin mui-client-produce';
+					var recommendHint='';
+					if(data.recommendType==1){//系统推荐
+						recommendHint='系统推荐';
+					}else if(data.recommendType==2){//人工推荐
+						recommendHint='人工推荐';
+					}
+					div.innerHTML = '<p class="mui-name client-produce">' + data.productName + '</p><p class="client-fl">' + data.timeStamp + '<span style="font-size:12px;color:#aaaaaa;float:right;">'+recommendHint+'</span></p>';
+					if(pullRefreshType == -1 || pullRefreshType == 1) { //首次加载，上拉加载更多
+						fragment.appendChild(div); //后面追加
+					} else if(pullRefreshType == 0) { //下拉刷新
+						fragment.insertBefore(div); //添加到最前面
+					}
+				});
+			}
+
+			/**
+			 * 客户基本信息
+			 * @param {Object} clientId 客户id
+			 * @param {Object} agentCode 代理人id(用户id)
+			 */
+			function clientInfo(clientId, agentCode) {
+				var url = baseUrl + "querycustomerinfo.json";
+				mui.ajax(url, {
+					data: {
+						id: clientId,
+						agentCode: agentCode
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					//headers:{'Content-Type':'application/json'}      
+					success: function(result) {
+						if(result.status == 1) {
+							var data = result.data;
+							createClientInfoView(data);
+						} else {
+							mui.toast("客户基本信息获取异常，请稍后再试");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}
+
+			/**
+			 * 推荐产品
+			 * @param {Object} clientId 客户id
+			 * @param {Object} agentCode 代理人id(用户id)
+			 * @param {Object} pageNow 当前页面
+			 */
+			function recommendProductList(clientId, agentCode, pPageNow) {
+				var url = baseUrl + "querycustrecommend.json";
+				mui.ajax(url, {
+					data: {
+						id: clientId,
+						agentCode: agentCode,
+						pageNow: pPageNow,
+						pageSize: mPageSize
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					//headers:{'Content-Type':'application/json'}      
+					success: function(result) {
+						if(result.status == 1) {
+							var data = result.data;
+							//保存全局
+							pageCount = Math.ceil(data.totalRecords / data.pageSize);
+							pageNow = data.pageNumber; //全局记录
+							//更新UI
+							var list = data.pageData; //json数据
+							var products = document.getElementById("client_recommend_products");
+							onCreateRecommendProductView(products, list);
+						} else {
+							mui.toast("推荐产品获取异常，请稍后再试");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

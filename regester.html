@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/style.css" rel="stylesheet" />
+		<style>
+		
+			.area {
+				margin: 20px auto 0px auto;
+			}
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			.mui-input-group label {
+				width: 22%;
+			}
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				width: 78%;
+			}
+			.mui-checkbox input[type=checkbox],
+			.mui-radio input[type=radio] {
+				top: 6px;
+			}
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+			.mui-btn {
+				padding: 10px;
+			}
+		//后期添加的
+		.mui-toast-container {
+	    bottom: 50% !important;/*离布局底部的距离*/
+	    }
+		.mui-toast-message {
+		    background: url(../img/indicator_input_error.png) no-repeat center 10px #000;   /*toast的背景图片*/
+		    opacity: 0.7;/*toast中背景色的透明度*/
+		        color: #FFFFFF; /*toast中字体颜色*/
+		    width: 180px; /*toast宽度*/
+		    height:100px;
+		    padding: 50px 5px 70px 5px;/*toast中文字的位置*/
+		}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">民生保险</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>姓名</label>
+					<input id='userName'name="userName" type="text" class="mui-input-clear mui-input" onblur=""   placeholder="请输入姓名(必填)">
+				</div>
+				<div class="mui-input-row">
+					<label>电话</label>
+					<input id='tel' type="text"  pattern="(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$"  class="mui-input-clear mui-input" placeholder="请输入手机号(必填)">
+				</div>
+				<div class="mui-input-row">
+				<label>身份证</label>
+					<input id='ide_Card' type="text" class="mui-input-clear mui-input" placeholder="请确认身份证(必填)">
+				</div>
+				<div class="mui-input-row">
+					<label>业务员号</label>
+					<input id='saleman' type="text" class="mui-input-clear mui-input" placeholder="请输入推存业务员">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='reg' class="mui-btn mui-btn-block mui-btn-primary">注册</button>
+			</div>
+			<div class="mui-content-padded">
+				<p>请填写真实的用户名，手机号，身份证，业务员可以选择填写或者不填写</p>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/constant.js"></script>
+		<script>
+		
+		 //注册事件
+		 mui(".mui-content-padded").on('tap','#reg',function(){
+		 	//var isCard=true;
+		 	//var isMobile=true;
+		 	var url=location.href;
+		 	var strLast=url.indexOf("iCmId");
+		 	var iCmIds=url.substr(strLast+6,url.length);
+		 	
+		 	
+		 	var regButton = document.getElementById('reg');
+					var userNameBox = document.getElementById('userName');
+					var telBox = document.getElementById('tel');
+					var ide_CardBox = document.getElementById('ide_Card');
+					var salemanBox = document.getElementById('saleman');
+					//验证用户是否为空
+					var checkNames=checkName(userNameBox.value);
+					
+					//var iCmIds='100001';//公司的代码
+					//验证身份证是否合法
+					var isCard=isCardNo(ide_CardBox.value);
+					
+					//验证手机号
+					var isMobile=checkMobile(telBox.value);
+					//若代理人不为空则进行验证
+					var isSalCode=checkSalemanCode();
+					console.log(isCard+"---->isCard"+" "+isMobile+"----->isMobile");
+					if(!isCard||!isMobile){
+						 mui.alert('手机号或者身份证输入\n不正确请查证后重新输入', '警告!',"确定", function() {
+	                    //info.innerText = '你刚关闭了警告框';
+	                },'div');
+	                
+	                return;
+					}else{
+						if(!checkNames){
+							 mui.alert('用户名不能为空!', '警告!',"确定", function() {
+                            //info.innerText = '你刚关闭了警告框';
+                            },'div');
+                            return;
+						}
+						if(!isSalCode){
+							 mui.alert('输入的业务员号不正\n确请查证后重新输入', '警告!',"确定", function() {
+	                       //info.innerText = '你刚关闭了警告框';
+	                     },'div');
+	                     return;
+						}
+						 //提交注册信息names,tels,iCiIds,agentCodes,iCmIds
+				       setUserInfo(userNameBox.value,telBox.value,ide_CardBox.value,salemanBox.value,iCmIds);
+					}
+				  
+				
+		 });
+		 
+		//用户名表空验证
+		function checkName(userName){
+		//var userName = document.getElementById('userName');
+		 var reg = /^\s*$/g;
+		 if(reg.test(userName)){
+	 		
+                return false;
+		 }
+		  return true;
+		}
+		 //身份证验证
+		 function isCardNo(card)  
+		{  
+		   // 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X  
+		   var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+		   if(!reg.test(card) )  
+		   {  
+		    
+		       return  false;  
+		   }  
+		   return true;
+		} 
+		//验证手机号
+		function checkMobile(tel) {
+			
+		  var re = /^1\d{10}$/;
+		    if (!re.test(tel)) {
+		      
+		        return false;
+		    } 
+		    return true;
+		}
+		//验证代理人代码
+		function checkSalemanCode(){
+			 var isNul_Bank = /^\s*$/g;//验证是否为空或者空格
+			  var re = /^1\d{9}$/;
+			  var salemanBox = document.getElementById('saleman');
+			  if(isNul_Bank.test(salemanBox.value)){
+			    	
+			  	return true;
+			  }else{
+			   
+			  	if(!re.test(salemanBox.value)){//若代理人不为空则进行验证
+			  	 return false;
+			    }
+			  }
+			  return true;
+		}
+		 //提交注册数据
+		function setUserInfo(names,tels,iCiIds,agentCodes,iCmIds){
+			
+			 //mui.ajax('http://localhost:8080/msyzf/reg//insertPotalCusterInfo.json',{
+			mui.ajax(baseUrl_reg+'insertPotalCusterInfo.json',{
+			data:{
+				name:names,
+				tel:tels,
+				iCiId:iCiIds,
+				agentCode:agentCodes,
+				iCmId:iCmIds
+			},
+			dataType:'json',//服务器返回json格式数据
+			type:'post',//HTTP请求类型
+			timeout:10000,//超时时间设置为10秒；
+			//headers:{'Content-Type':'application/json'},	              
+			success:function(result){
+				//服务器返回响应，根据响应结果，分析是否登录成功；
+				if(result.status==1){
+					var data=result.data;
+					//alert(result.msg+"SUCCESS!");
+					 mui.alert('恭喜您注册成功', '成功!',"确定", function() {
+	                       //info.innerText = '你刚关闭了警告框';
+			                 mui.openWindow({
+							url:'success.html',
+							id:'success.html'
+							});
+	                     },'div');
+					
+				}else{
+					//alert(result.msg+"您已经注册");
+					 mui.toast('您已经注册!',{ duration:'200', type:'div' })
+				
+				}
+				
+			},
+			error:function(xhr,type,errorThrown){
+				//异常处理；
+				console.log(type);
+			}
+		});
+		}
+		
+		
+		</script>
+	</body>
+
+</html>

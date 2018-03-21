@@ -1,0 +1,197 @@
+
+body{ overflow-x: hidden;}
+
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+
+/*标题背景颜色和字体大小*/
+.mui-title-background-color{
+	background-color: #21c0fa;
+    color: #ffffff;
+}
+.mui-title-color{
+	color: #ffffff;
+    font-size: 22px;
+}
+.mui-back-color{
+	color: #fff;
+}
+
+/*搜索样式*/
+/*.mui-search-style{
+	height: 50px;
+	z-index: 10;
+	position: fixed;
+	width: 100%;
+	background-color: #f1f1f1;
+	padding-top:5px;
+	padding-bottom: 8px;
+	margin-top: 45px;
+}*/
+.mui-btns{
+	border: 0px; 
+	background-color:#efeff4; 
+	font-size: 18px;
+	color: #666666;
+}
+.mui-name{
+	font-size: 18px;
+	color: #333333;
+}
+.mui-phone{
+	margin-top: 5px;
+	font-size: 18px;
+	color: #666666;
+}
+.mui-produce{
+	color: #ffb81d;
+	position: absolute;
+	top: 35%;
+	right: 10%;
+}
+.mui-border-bottom{
+	border-bottom: 1px solid #eee;
+}
+
+.mui-border-right{
+	border-right: 1px solid #eee;
+}
+
+/*
+ 行业热点样式
+ * */
+.mui-industry-style{
+	background-color: #fff;
+	height: 50px;
+	padding-left: 15px;
+}
+.mui-host{
+	line-height: 50px;
+	margin-top: 10px;
+	font-size:18px;
+	margin-top: 0px;
+	margin-left: 10px;
+}
+.table-title{
+	font-size: 16px;
+	font-family: "微软雅黑";
+}
+.industry-table{
+	background-color: white;
+	/*margin-top:5px ;*/
+}
+.industry-table thead  th{
+	font-size: 16px;
+	color: #797979;
+	border-bottom: 1px solid #eee;
+	height: 45px;
+}
+.industry-table tbody td{
+	text-align: center;
+	height: 55px;
+	font-size: 14px;
+	border-bottom: 1px solid #eee;
+}
+.mui-padding-bottom{
+	padding-bottom: 5px;
+}
+.mui-margin{
+	margin: 5px 5px;
+}
+.industry-table tbody tr td div{width: 28px;}
+.hot-img{ height: 15px; margin-left: 10px;}
+.up-img{ height: 15px;}
+.minus-img{ width: 15px;}
+
+.client-fl{color: #666666; }
+.client-fr{color: #333333;}
+.client-produce{
+	border-bottom:1px dashed #ccc; 
+	margin-bottom:5px; 
+	padding-bottom: 5px;
+}
+
+a, a:focus, a:hover, a:active {
+    outline: none;
+    color: #333;
+    text-decoration: none;
+}
+
+footer{
+	z-index: 10;
+	height: 45px;
+	position: fixed;
+    right: 0;
+    left: 0;
+    background-color: #fff;
+    line-height:45px;
+    border-bottom: 1px solid #eee;
+}
+footer a.mui-pick{
+	color: #21c0fa;
+	border-bottom: 2px solid #21c0fa;
+}
+
+footer a {
+	height: 45px;
+    display: initial;
+    width: 50%;
+    float: left;
+    text-align: center;
+    color: #737373;
+    font-size: 17px;
+    font-family: "微软雅黑";
+    color: #333;
+}
+
+
+footer a.pick i.icon-f1 {
+    background-position: -110px -33px;
+}
+footer a i.icon-f1 {
+    background-position: -110px -4px;
+}
+footer a i.icon {
+    background-size: 280px 280px;
+}
+
+.icon {
+    display: inline-block;
+    background-image:  url(../img/recommend (2).png);
+    background-size: 350px 350px;
+    
+}
+footer a i {
+    display: inherit !important;
+    margin: 0 auto;
+    width: 30px;
+    height: 30px;
+}
+
+
+.mui-table-view-cells{
+	overflow: hidden;
+    padding: 11px 15px;
+    color: #797979;
+}
+.mui-client-produce{
+	background-color: white;
+	padding: 10px 20px;
+}
+.mui-margin p{
+	margin-bottom: 0px;
+}
+/*标题文本颜色和字体大小*/
+.mui-title-text-color {
+	color: #FFFFFF;
+}
+/*搜索框里的图标*/
+.mui-search-img{
+	
+	background: url(../img/sousuo.png) no-repeat 3% ;
+
+}

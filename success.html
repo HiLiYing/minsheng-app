@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+   
+    <link href="css/mui.min.css" rel="stylesheet"/>
+   
+    <style type="text/css">
+    	.mui-bar{
+         background-color: #0099FF;
+         }
+		.mui-title{
+		     color:#fff;
+		}
+		.mui-content{
+			margin-top: 30px;
+			position:relative;
+			left:-50%;
+			
+		}
+		.mui-bar-nav a{
+			 color:#fff;
+		}
+		body{
+			float:left;
+			position:relative;
+			left:50%;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title" >民生保险营销活动</h1>
+	</header>
+	<div class="mui-content">
+	    <form >
+	    	<div class="mui-input-row" >
+	    	<h3 id="show">感谢您的参与</h3>    
+	    	</div>
+	    </form>
+	</div>
+	<div></div>
+	 <script src="js/mui.js"></script>
+     <script src="js/app.js"></script>
+      <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+	<script type="text/javascript">
+	plusReady();
+	function plusReady(){
+		userId = sessionStorage.getItem("customerInfo");
+		alert("this is --->"+userId);
+	}
+		
+	
+	</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+body{ overflow-x: hidden;}
+.container{ width: 1080px; margin: auto;}
+.search{ color:797979; margin-top: 10px; text-align: center;}
+.search-date{height:24px; width:180px; margin-left:5px; width: 85%; border-radius: 6px; border: 1px solid #ccc; height:35px;}
+.search-btn{border-radius:4px; height:24px; border:1px solid #ccc; font-size:12px; margin-left:10px; width:60px;}
+.percent{ margin-bottom: 10px;}
+.percent-table{}
+.user{ font-size:16px ; font-family: "微软雅黑"; text-align: center;}
+.user-recommend{ padding: 15px 0px;font-family: "微软雅黑"; width: 100%;}
+.recommend{float: left; width:30%; text-align: center; font-size: 13px;}
+.recommend-one{float: left; width:28%; text-align: center; font-size: 13px;}
+.recommend-two{float: left;  text-align: center; font-size: 13px;}
+.recommend-number{ font-size: 15px; text-align: center; font-weight: 600;}
+
+.user-img{padding:10px 0px ;}
+.percent-table{margin-bottom: 30px;}
+.percent-table table thead th{ color: #797979; text-align: center; background-color: #eee; height:40px ; font-size: 13px;}
+.percent-table table{ border: 1px solid #cccccc; text-align: center;}
+.percent-table table tbody{ font-size: 13px;}
+.percent-table table tbody tr{ height: 35px;}
+.percent-two{ margin-top: 30px;}
